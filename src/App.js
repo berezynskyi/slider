@@ -30,37 +30,45 @@ class ImageDiv extends React.Component {
   constructor(props) {
     super(props);
     this.state = {index: 0};
-    this.componentWillUnmount = this.componentWillUnmount.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
+    this.startTimer = this.startTimer.bind(this);
     this.pullLeft = this.pullLeft.bind(this);
     this.pullRight = this.pullRight.bind(this);
   }
 
-  componentDidMount() {
+  startTimer(){
     this.timerID = setInterval(
       () => this.tick(),
       10000
     );
   }
 
-  componentWillUnmount() {
+  stopTimer(){
     clearInterval(this.timerID);
+  }
+
+  componentDidMount() {
+    this.startTimer();
+  }
+
+  componentWillUnmount() {
+    this.stopTimer();
   }
 
   pullLeft(){
     this.setState({
       index: (this.state.index === 0) ? this.state.index = Feed.slider.length-1 : this.state.index -= 1
     });
-    this.componentWillUnmount();
-    this.componentDidMount();
+    this.stopTimer();
+    this.startTimer();
   }  
 
   pullRight(){
     this.setState({
       index: (this.state.index === Feed.slider.length-1) ? this.state.index = 0 : this.state.index += 1
     });
-    this.componentWillUnmount();
-    this.componentDidMount();
+    this.stopTimer();
+    this.startTimer();
   }
 
   tick() {
@@ -74,7 +82,7 @@ class ImageDiv extends React.Component {
       <div className=" divWithImage ">
         <NavButton text=" Left " onClick={ this.pullLeft } class=" leftButton " />
         <NavButton text=" Right " onClick={ this.pullRight } class=" rightButton " />
-        <img className=" imageHero " src={ Feed.slider[this.state.index].hero } onMouseEnter={ this.componentWillUnmount } onMouseLeave={ this.componentDidMount } />
+        <img className=" imageHero " src={ Feed.slider[this.state.index].hero } onMouseEnter={ this.stopTimer } onMouseLeave={ this.startTimer } />
         <ImageWithText index={ this.state.index } />
       </div>
       );
