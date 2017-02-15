@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
 const Feed = { 
@@ -23,9 +22,9 @@ const Feed = {
 }
 
 const NavButton = (props) =>
-  <button className={props.class} >{props.text}</button>
+  <button className={ props.class } onClick={ props.func } >{props.text}</button>
  
-class ImageDiv extends React.Component {
+class Slider extends React.Component {
 
   constructor(props) {
     super(props);
@@ -51,39 +50,41 @@ class ImageDiv extends React.Component {
     this.startTimer();
   }
 
-  componentWillUnmount() {
-    this.stopTimer();
-  }
-
   pullLeft(){
+    let index = this.state.index;
     this.setState({
-      index: (this.state.index === 0) ? this.state.index = Feed.slider.length-1 : this.state.index -= 1
+      index: (this.state.index === 0) ? Feed.slider.length-1 : --index
     });
     this.stopTimer();
     this.startTimer();
   }  
 
   pullRight(){
+    let index = this.state.index;
     this.setState({
-      index: (this.state.index === Feed.slider.length-1) ? this.state.index = 0 : this.state.index += 1
+      index: (this.state.index === Feed.slider.length-1) ? 0 : ++index
     });
     this.stopTimer();
     this.startTimer();
   }
 
   tick() {
+    let index = this.state.index;
     this.setState({
-      index: (this.state.index >= Feed.slider.length-1) ? this.state.index = 0 : this.state.index += 1
+      index: (this.state.index >= Feed.slider.length-1) ? 0 : ++index
     });
   }
 
   render() {
+    const index = this.state.index;
     return (
       <div className=" divWithImage ">
-        <NavButton text=" Left " onClick={ this.pullLeft } class=" leftButton " />
-        <NavButton text=" Right " onClick={ this.pullRight } class=" rightButton " />
-        <img className=" imageHero " src={ Feed.slider[this.state.index].hero } onMouseEnter={ this.stopTimer } onMouseLeave={ this.startTimer } />
-        <ImageWithText index={ this.state.index } />
+        <NavButton text=" Left " func={ this.pullLeft } class=" leftButton " />
+        <NavButton text=" Right " func={ this.pullRight } class=" rightButton " />
+        <div onMouseEnter={ this.stopTimer } onMouseLeave={ this.startTimer } >
+          <img className=" imageHero " src={ Feed.slider[index].hero } role="presentation" />
+          <ImageWithText index={ index } />
+        </div>
       </div>
       );
   }
@@ -92,10 +93,10 @@ class ImageDiv extends React.Component {
 function ImageWithText(props){
   return (
     <div className=" imageWithText " >
-      <img src={ Feed.slider[props.index].image } />
+      <img src={ Feed.slider[props.index].image } role="presentation" />
       <div className=" text " > { Feed.slider[props.index].text } </div>
     </div>
     );
 }
 
-export default ImageDiv;
+export default Slider;

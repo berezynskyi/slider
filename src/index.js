@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ImageDiv from './App';
+import Slider from './App';
 import './index.css';
 
 ReactDOM.render(
-  <ImageDiv />,
+  <Slider />,
   document.getElementById('root')
 );
